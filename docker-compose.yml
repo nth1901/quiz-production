@@ -1,22 +1,30 @@
-cat > docker-compose.yml << 'EOF'
 version: '3.8'
+
 services:
   backend:
     build: ./backend
-    container_name: backend
+    container_name: english-backend
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
     networks:
-      - mynet
+      - english-network
+    # Không expose port ra ngoài, chỉ trong network
 
   frontend:
-    build: ./frontend
-    container_name: frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: english-frontend
+    restart: always
     ports:
-      - "8080:80"
+      - "8080:80"  # Map to 8080 để tránh conflict với nginx chính
     depends_on:
       - backend
     networks:
-      - mynet
+      - english-network
 
 networks:
-  mynet:
-EOF
+  english-network:
+    driver: bridge
