@@ -1,0 +1,1262 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Tiếng Anh - Quiz & Matching</title>
+    <style>
+        /* ========== RESET & BASE STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        /* ========== TABS STYLES ========== */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            background-color: #e0e0e0;
+            color: #666;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+            .tab-button:hover {
+                background-color: #d0d0d0;
+            }
+
+            .tab-button.active {
+                background-color: #4CAF50;
+                color: white;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            }
+
+        /* ========== MODULE CONTAINER ========== */
+        .module-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+
+        /* ========== QUIZ MODULE STYLES ========== */
+        .quiz-module h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .quiz-controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+            .quiz-controls select {
+                padding: 8px 15px;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+        .question {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+
+            .question h3 {
+                color: #2c3e50;
+                margin-bottom: 20px;
+                font-size: 1.3em;
+            }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            text-align: left;
+        }
+
+            .option:hover {
+                background-color: #f5f5f5;
+                border-color: #4CAF50;
+                transform: translateX(5px);
+            }
+
+            .option.selected {
+                background-color: #e3f2fd;
+                border-color: #2196F3;
+                font-weight: 500;
+            }
+
+            .option.correct {
+                background-color: #c8e6c9;
+                border-color: #4CAF50;
+                color: #2e7d32;
+            }
+
+            .option.incorrect {
+                background-color: #ffcdd2;
+                border-color: #f44336;
+                color: #c62828;
+            }
+
+        /* ========== QUIZ NAVIGATION ========== */
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+
+            .quiz-navigation button {
+                padding: 8px 20px;
+                border: none;
+                background-color: #2196F3;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            }
+
+                .quiz-navigation button:hover:not(:disabled) {
+                    background-color: #1976D2;
+                    transform: translateY(-2px);
+                }
+
+                .quiz-navigation button:disabled {
+                    background-color: #ccc;
+                    cursor: not-allowed;
+                }
+
+        #questionCounter {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .submit-all-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 40px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .submit-all-btn:hover {
+                background-color: #45a049;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+            }
+
+        /* ========== MATCHING MODULE STYLES ========== */
+        .matching-module h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .matching-controls {
+            margin-bottom: 20px;
+        }
+
+            .matching-controls select {
+                width: 100%;
+                padding: 10px;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+
+        .instruction {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .matching-container {
+            display: flex;
+            gap: 50px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .column {
+            flex: 1;
+            max-width: 300px;
+        }
+
+            .column h4 {
+                text-align: center;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                font-size: 1.2em;
+            }
+
+        .match-item {
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+            .match-item:hover {
+                background-color: #e3f2fd;
+                border-color: #2196F3;
+                transform: scale(1.05);
+            }
+
+            .match-item.selected {
+                background-color: #2196F3;
+                color: white;
+                border-color: #1976D2;
+            }
+
+            .match-item.paired {
+                background-color: #fff3cd;
+                border-color: #ffc107;
+            }
+
+            .match-item.correct {
+                background-color: #c8e6c9;
+                border-color: #4CAF50;
+                color: #2e7d32;
+            }
+
+            .match-item.incorrect {
+                background-color: #ffcdd2;
+                border-color: #f44336;
+                color: #c62828;
+            }
+
+        .matching-info {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #666;
+        }
+
+        #pairCount {
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .check-button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 40px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .check-button:hover {
+                background-color: #1976D2;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+            }
+
+        /* ========== RESULTS STYLES ========== */
+        .results, .result-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+
+            .results h3, .result-box h4 {
+                color: #2c3e50;
+                margin-bottom: 15px;
+            }
+
+            .results p, .result-box p {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+        details {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #2196F3;
+            padding: 5px;
+        }
+
+        details ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        details li {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        /* ========== LOADING & ERROR STYLES ========== */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 20px;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 30px;
+            color: #f44336;
+            background-color: #ffebee;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .matching-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .column {
+                max-width: 100%;
+            }
+
+            .module-container {
+                padding: 20px;
+            }
+        }
+		/* Thêm vào phần style */
+.fill-sentence {
+    font-size: 20px;
+    line-height: 2;
+    margin: 20px 0;
+}
+
+.fill-input {
+    display: inline-block;
+    width: 150px;
+    padding: 5px 10px;
+    border: 2px solid #2196F3;
+    border-radius: 4px;
+    font-size: 18px;
+    margin: 0 5px;
+}
+
+.fill-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background-color: #f0f8ff;
+}
+
+.hints {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border-radius: 5px;
+    color: #856404;
+}
+
+.answer-details {
+    margin-top: 15px;
+}
+
+.answer-item {
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+}
+
+.answer-item.correct {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.answer-item.incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+.correct-answer {
+    color: #28a745;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.incorrect-answer {
+    color: #dc3545;
+    font-weight: bold;
+    text-decoration: line-through;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Học Tiếng Anh - English Learning</h1>
+
+        <!-- Tabs để chọn module -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="loadModule('quiz')">📝 Trắc nghiệm</button>
+            <button class="tab-button" onclick="loadModule('matching')">🔗 Nối nghĩa</button>
+			<button class="tab-button" onclick="loadModule('fillblanks')">✏️ Điền chỗ trống</button>
+		</div>
+
+        <!-- Container chính để load module -->
+        <div id="moduleContainer" class="module-container">
+            <!-- Nội dung module sẽ được load vào đây -->
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURATION ==========
+        const CONFIG = {
+            API_URL: 'http://localhost:3000/api',
+            DEFAULT_MODULE: 'quiz'
+        };
+
+        // ========== UTILITIES ==========
+        const Utils = {
+            // Hàm gọi API chung
+            async fetchAPI(endpoint, options = {}) {
+                try {
+                    const response = await fetch(`${CONFIG.API_URL}${endpoint}`, options);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('API Error:', error);
+                    throw error;
+                }
+            },
+
+            // Hàm hiển thị loading
+            showLoading(container) {
+                container.innerHTML = '<div class="loading">⏳ Đang tải dữ liệu...</div>';
+            },
+
+            // Hàm hiển thị lỗi
+            showError(container, message) {
+                container.innerHTML = `<div class="error">❌ Lỗi: ${message}</div>`;
+            }
+        };
+
+        // ========== QUIZ MODULE ==========
+        const QuizModule = {
+            // Biến lưu trữ
+            questions: [],
+            currentQuestionIndex: 0,
+            userAnswers: [],
+
+            // Khởi tạo module
+            async init(container) {
+                Utils.showLoading(container);
+
+                try {
+                    // Load câu hỏi từ API
+                    this.questions = await Utils.fetchAPI('/quiz');
+                    this.currentQuestionIndex = 0;
+                    this.userAnswers = [];
+
+                    // Render giao diện
+                    this.render(container);
+                } catch (error) {
+                    Utils.showError(container, 'Không thể tải câu hỏi trắc nghiệm. Vui lòng kiểm tra kết nối server!');
+                }
+            },
+
+            // Render giao diện chính
+            render(container) {
+                container.innerHTML = `
+                            <div class="quiz-module">
+                                <h2>📚 Câu hỏi trắc nghiệm</h2>
+                                <div class="quiz-controls">
+                                    <label for="levelFilter">Chọn độ khó:</label>
+                                    <select id="levelFilter" onchange="QuizModule.filterQuestions()">
+                                        <option value="">Tất cả độ khó</option>
+                                        <option value="easy">Dễ</option>
+                                        <option value="medium">Trung bình</option>
+                                        <option value="hard">Khó</option>
+                                    </select>
+                                </div>
+                                <div id="questionContainer"></div>
+                                <div class="quiz-navigation">
+                                    <button onclick="QuizModule.previousQuestion()" id="prevBtn">⬅️ Câu trước</button>
+                                    <span id="questionCounter"></span>
+                                    <button onclick="QuizModule.nextQuestion()" id="nextBtn">Câu sau ➡️</button>
+                                </div>
+                                <button onclick="QuizModule.submitAll()" class="submit-all-btn">📤 Nộp bài</button>
+                                <div id="quizResults"></div>
+                            </div>
+                        `;
+
+                this.displayQuestion();
+            },
+
+            // Hiển thị câu hỏi hiện tại
+            displayQuestion() {
+                if (this.questions.length === 0) {
+                    document.getElementById('questionContainer').innerHTML =
+                        '<div class="error">Không có câu hỏi nào. Vui lòng thử lại sau!</div>';
+                    return;
+                }
+
+                const question = this.questions[this.currentQuestionIndex];
+                const container = document.getElementById('questionContainer');
+
+                container.innerHTML = `
+                            <div class="question">
+                                <h3>Câu ${this.currentQuestionIndex + 1}: ${question.question}</h3>
+                                <div class="options">
+                                    ${question.options.map((option, index) => `
+                                        <button class="option ${this.userAnswers[this.currentQuestionIndex] === index ? 'selected' : ''}"
+                                                onclick="QuizModule.selectAnswer(${index})">
+                                            ${String.fromCharCode(65 + index)}. ${option}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+
+                // Cập nhật counter và nút điều hướng
+                document.getElementById('questionCounter').textContent =
+                    `${this.currentQuestionIndex + 1} / ${this.questions.length}`;
+                document.getElementById('prevBtn').disabled = this.currentQuestionIndex === 0;
+                document.getElementById('nextBtn').disabled = this.currentQuestionIndex === this.questions.length - 1;
+            },
+
+            // Chọn đáp án
+            selectAnswer(answerIndex) {
+                this.userAnswers[this.currentQuestionIndex] = answerIndex;
+                this.displayQuestion(); // Re-render để update UI
+            },
+
+            // Chuyển câu hỏi
+            previousQuestion() {
+                if (this.currentQuestionIndex > 0) {
+                    this.currentQuestionIndex--;
+                    this.displayQuestion();
+                }
+            },
+
+            nextQuestion() {
+                if (this.currentQuestionIndex < this.questions.length - 1) {
+                    this.currentQuestionIndex++;
+                    this.displayQuestion();
+                }
+            },
+
+            // Nộp tất cả câu trả lời
+            async submitAll() {
+                // Kiểm tra xem đã trả lời hết chưa
+                const unanswered = this.questions.length - this.userAnswers.filter(a => a !== undefined).length;
+                if (unanswered > 0) {
+                    if (!confirm(`Bạn còn ${unanswered} câu chưa trả lời. Vẫn muốn nộp bài?`)) {
+                        return;
+                    }
+                }
+
+                // Chuẩn bị dữ liệu
+                const answers = this.questions.map((q, index) => ({
+                    questionId: q.id,
+                    selectedAnswer: this.userAnswers[index] !== undefined ? this.userAnswers[index] : -1
+                }));
+
+                try {
+                    const result = await Utils.fetchAPI('/quiz/check-multiple', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ answers })
+                    });
+
+                    // Hiển thị kết quả
+                    document.getElementById('quizResults').innerHTML = `
+                                <div class="results">
+                                    <h3>📊 Kết quả của bạn</h3>
+                                    <p>✅ Số câu đúng: ${result.score}/${result.total}</p>
+                                    <p>📈 Tỷ lệ: ${result.percentage}%</p>
+                                    <p>${result.percentage >= 80 ? '🎉 Xuất sắc!' :
+                            result.percentage >= 60 ? '👍 Tốt lắm!' :
+                                result.percentage >= 40 ? '💪 Cố gắng thêm!' :
+                                    '📚 Cần ôn tập thêm!'}</p>
+                                    <button onclick="QuizModule.reviewAnswers()" class="check-button">
+                                        👀 Xem lại đáp án
+                                    </button>
+                                </div>
+                            `;
+
+                    // Lưu kết quả để review
+                    this.lastResult = result;
+                } catch (error) {
+                    alert('❌ Lỗi khi nộp bài! Vui lòng thử lại.');
+                }
+            },
+
+            // Xem lại đáp án
+            reviewAnswers() {
+                if (!this.lastResult) return;
+
+                // Hiển thị từng câu với đáp án
+                let reviewHTML = '<div class="results"><h3>📋 Chi tiết đáp án</h3>';
+
+                this.questions.forEach((question, index) => {
+                    const result = this.lastResult.results[index];
+                    const userAnswer = this.userAnswers[index];
+
+                    reviewHTML += `
+                                <div class="question" style="margin-bottom: 20px;">
+                                    <h4>Câu ${index + 1}: ${question.question}</h4>
+                                    <p>Đáp án của bạn: ${userAnswer !== undefined ?
+                            `${String.fromCharCode(65 + userAnswer)}. ${question.options[userAnswer]}` :
+                            'Chưa trả lời'}</p>
+                                    <p>Đáp án đúng: ${String.fromCharCode(65 + result.correctAnswer)}.
+                                        ${question.options[result.correctAnswer]}</p>
+                                    <p>${result.isCorrect ? '✅ Đúng' : '❌ Sai'}</p>
+                                </div>
+                            `;
+                });
+
+                reviewHTML += '</div>';
+                document.getElementById('quizResults').innerHTML = reviewHTML;
+            },
+
+            // Filter câu hỏi theo level
+            async filterQuestions() {
+                const level = document.getElementById('levelFilter').value;
+                const url = level ? `/quiz?level=${level}` : '/quiz';
+
+                try {
+                    Utils.showLoading(document.getElementById('questionContainer'));
+                    this.questions = await Utils.fetchAPI(url);
+                    this.currentQuestionIndex = 0;
+                    this.userAnswers = [];
+                    this.displayQuestion();
+                } catch (error) {
+                    console.error('Error filtering questions:', error);
+                    Utils.showError(document.getElementById('questionContainer'),
+                        'Không thể tải câu hỏi theo độ khó này');
+                }
+            }
+        };
+// Thêm vào phần script, sau MatchingModule
+const FillBlanksModule = {
+    questions: [],
+    currentQuestionIndex: 0,
+    userAnswers: {},
+    
+    // Khởi tạo module
+    async init(container) {
+        Utils.showLoading(container);
+        
+        try {
+            this.questions = await Utils.fetchAPI('/fill-blanks');
+            this.currentQuestionIndex = 0;
+            this.userAnswers = {};
+            this.render(container);
+        } catch (error) {
+            Utils.showError(container, 'Không thể tải câu hỏi điền chỗ trống');
+        }
+    },
+    
+    // Render giao diện
+    render(container) {
+        container.innerHTML = `
+            <div class="fill-blanks-module">
+                <h2>✏️ Điền vào chỗ trống</h2>
+                <div class="quiz-controls">
+                    <select id="fillLevelFilter" onchange="FillBlanksModule.filterQuestions()">
+                        <option value="">Tất cả độ khó</option>
+                        <option value="easy">Dễ</option>
+                        <option value="medium">Trung bình</option>
+                        <option value="hard">Khó</option>
+                    </select>
+                </div>
+                <div id="fillQuestionContainer"></div>
+                <div class="quiz-navigation">
+                    <button onclick="FillBlanksModule.previousQuestion()" id="fillPrevBtn">⬅️ Câu trước</button>
+                    <span id="fillQuestionCounter"></span>
+                    <button onclick="FillBlanksModule.nextQuestion()" id="fillNextBtn">Câu sau ➡️</button>
+                </div>
+                <button onclick="FillBlanksModule.submitAll()" class="submit-all-btn">
+				📤 Nộp bài 
+				</button>
+                <div id="fillResults"></div>
+            </div>
+        `;
+        
+        this.displayQuestion();
+    },
+    
+    // Hiển thị câu hỏi
+    displayQuestion() {
+        if (this.questions.length === 0) {
+            document.getElementById('fillQuestionContainer').innerHTML = 
+                '<div class="error">Không có câu hỏi nào!</div>';
+            return;
+        }
+        
+        const question = this.questions[this.currentQuestionIndex];
+        const container = document.getElementById('fillQuestionContainer');
+        
+        // Tạo câu với input cho chỗ trống
+        let sentenceHTML = question.sentence;
+        for (let i = 0; i < question.blankCount; i++) {
+            const savedAnswer = this.userAnswers[`${question.id}_${i}`] || '';
+            sentenceHTML = sentenceHTML.replace('___', 
+                `<input type="text" 
+                        class="fill-input" 
+                        data-index="${i}"
+                        value="${savedAnswer}"
+                        placeholder="..."
+                        onchange="FillBlanksModule.saveAnswer(${question.id}, ${i}, this.value)">`
+            );
+        }
+        
+        container.innerHTML = `
+            <div class="question">
+                <h3>Câu ${this.currentQuestionIndex + 1}:</h3>
+                <div class="fill-sentence">${sentenceHTML}</div>
+                <div class="hints">
+                    💡 Gợi ý: ${question.hints.join(', ')}
+                </div>
+            </div>
+        `;
+        
+        // Cập nhật navigation
+        document.getElementById('fillQuestionCounter').textContent = 
+            `${this.currentQuestionIndex + 1} / ${this.questions.length}`;
+        document.getElementById('fillPrevBtn').disabled = this.currentQuestionIndex === 0;
+        document.getElementById('fillNextBtn').disabled = this.currentQuestionIndex === this.questions.length - 1;
+    },
+    
+    // Lưu câu trả lời
+    saveAnswer(questionId, index, value) {
+        this.userAnswers[`${questionId}_${index}`] = value;
+    },
+    
+    // Chuyển câu
+    previousQuestion() {
+        if (this.currentQuestionIndex > 0) {
+            this.currentQuestionIndex--;
+            this.displayQuestion();
+        }
+    },
+    
+    nextQuestion() {
+        if (this.currentQuestionIndex < this.questions.length - 1) {
+            this.currentQuestionIndex++;
+            this.displayQuestion();
+        }
+    },
+    
+   // Thêm hàm mới vào FillBlanksModule
+async submitAll() {
+    // Thu thập tất cả câu trả lời
+    const answers = this.questions.map(question => {
+        const userAnswers = [];
+        for (let i = 0; i < question.blankCount; i++) {
+            const answer = this.userAnswers[`${question.id}_${i}`] || '';
+            userAnswers.push(answer);
+        }
+        return {
+            questionId: question.id,
+            userAnswers: userAnswers
+        };
+    });
+    
+    // Kiểm tra có câu nào chưa điền
+    const totalBlanks = this.questions.reduce((sum, q) => sum + q.blankCount, 0);
+    const filledBlanks = Object.values(this.userAnswers).filter(a => a.trim() !== '').length;
+    
+    if (filledBlanks < totalBlanks) {
+        if (!confirm(`Bạn mới điền ${filledBlanks}/${totalBlanks} chỗ trống. Vẫn muốn nộp bài?`)) {
+            return;
+        }
+    }
+    
+    try {
+        const result = await Utils.fetchAPI('/fill-blanks/check-all', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ answers })
+        });
+        
+        // Hiển thị kết quả tổng
+        this.displayAllResults(result);
+    } catch (error) {
+        alert('❌ Lỗi khi nộp bài!');
+    }
+},
+// Thêm hàm hiển thị kết quả tổng
+displayAllResults(result) {
+    const resultDiv = document.getElementById('fillResults');
+    resultDiv.innerHTML = `
+        <div class="results">
+            <h3>📊 Kết quả tổng hợp</h3>
+            <p>✅ Số chỗ trống đúng: ${result.totalScore}/${result.totalBlanks}</p>
+            <p>📈 Tỷ lệ: ${result.percentage}%</p>
+            <p>${result.percentage >= 80 ? '🎉 Xuất sắc!' : 
+                 result.percentage >= 60 ? '👍 Tốt lắm!' : 
+                 result.percentage >= 40 ? '💪 Cố gắng thêm!' : 
+                 '📚 Cần ôn tập thêm!'}</p>
+            <button onclick="FillBlanksModule.reviewAllAnswers()" class="check-button">
+                👀 Xem chi tiết từng câu
+            </button>
+        </div>
+    `;
+    
+    // Lưu kết quả để review
+    this.lastResult = result;
+},
+// Thêm hàm xem chi tiết
+reviewAllAnswers() {
+    if (!this.lastResult) return;
+    
+    let reviewHTML = '<div class="results"><h3>📋 Chi tiết từng câu</h3>';
+    
+    this.questions.forEach((question, qIndex) => {
+        const questionResult = this.lastResult.questionResults[qIndex];
+        
+        // Tạo câu với kết quả
+        let sentenceWithResults = question.sentence;
+        questionResult.results.forEach((result, index) => {
+            const replacement = result.isCorrect 
+                ? `<span class="correct-answer">${result.userAnswer} ✅</span>`
+                : `<span class="incorrect-answer">${result.userAnswer || '(trống)'} ❌ → ${result.correctAnswers.join(' hoặc ')}</span>`;
+            sentenceWithResults = sentenceWithResults.replace('___', replacement);
+        });
+        
+        reviewHTML += `
+            <div class="question" style="margin-bottom: 20px;">
+                <h4>Câu ${qIndex + 1}: (${questionResult.score}/${questionResult.total} đúng)</h4>
+                <div class="fill-sentence">${sentenceWithResults}</div>
+            </div>
+        `;
+    });
+    
+    reviewHTML += '</div>';
+    document.getElementById('fillResults').innerHTML = reviewHTML;
+},
+
+    
+    // Filter câu hỏi
+    async filterQuestions() {
+        const level = document.getElementById('fillLevelFilter').value;
+        const url = level ? `/fill-blanks?level=${level}` : '/fill-blanks';
+        
+        try {
+            this.questions = await Utils.fetchAPI(url);
+            this.currentQuestionIndex = 0;
+            this.userAnswers = {};
+            this.displayQuestion();
+        } catch (error) {
+            console.error('Error filtering questions:', error);
+        }
+    }
+};
+
+        // ========== MATCHING MODULE ==========
+        const MatchingModule = {
+            // Biến lưu trữ
+            questions: [],
+            currentQuestion: null,
+            selectedLeft: null,
+            selectedRight: null,
+            userPairs: [],
+
+            // Khởi tạo module
+            async init(container) {
+                Utils.showLoading(container);
+
+                try {
+                    this.questions = await Utils.fetchAPI('/matching');
+                    this.render(container);
+                } catch (error) {
+                    Utils.showError(container, 'Không thể tải câu hỏi nối nghĩa. Vui lòng kiểm tra kết nối server!');
+                }
+            },
+
+            // Render giao diện chính
+            render(container) {
+                if (this.questions.length === 0) {
+                    container.innerHTML = '<div class="error">Không có câu hỏi nối nghĩa nào!</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                            <div class="matching-module">
+                                <h2>🔗 Bài tập nối nghĩa</h2>
+                                <div class="matching-controls">
+                                    <label for="matchingQuestionSelect">Chọn bài tập:</label>
+                                    <select id="matchingQuestionSelect" onchange="MatchingModule.loadQuestion()">
+                                        ${this.questions.map((q, index) =>
+                    `<option value="${index}">${q.title}</option>`
+                ).join('')}
+                                    </select>
+                                </div>
+                                <div id="matchingContent"></div>
+                            </div>
+                        `;
+
+                // Load câu hỏi đầu tiên
+                this.loadQuestion();
+            },
+
+            // Load một câu hỏi
+            loadQuestion() {
+                const index = parseInt(document.getElementById('matchingQuestionSelect').value);
+                this.currentQuestion = this.questions[index];
+                this.userPairs = [];
+                this.selectedLeft = null;
+                this.selectedRight = null;
+
+                const content = document.getElementById('matchingContent');
+                content.innerHTML = `
+                            <h3>${this.currentQuestion.title}</h3>
+                            <p class="instruction">${this.currentQuestion.instruction || 'Hãy nối các mục ở cột A với cột B'}</p>
+                            <div class="matching-container">
+                                <div class="column left-column">
+                                    <h4>Cột A</h4>
+                                    ${this.currentQuestion.leftColumn.map(item => `
+                                        <div class="match-item" data-id="${item.id}"
+                                             onclick="MatchingModule.selectLeft('${item.id}')">
+                                            ${item.text}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div class="column right-column">
+                                    <h4>Cột B</h4>
+                                    ${this.currentQuestion.rightColumn.map(item => `
+                                        <div class="match-item" data-id="${item.id}"
+                                             onclick="MatchingModule.selectRight('${item.id}')">
+                                            ${item.text}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="matching-info">
+                                Đã nối: <span id="pairCount">0</span> / ${this.currentQuestion.leftColumn.length} cặp
+                            </div>
+                            <button class="check-button" onclick="MatchingModule.checkAnswer()">
+                                ✅ Kiểm tra đáp án
+                            </button>
+                            <button class="check-button" onclick="MatchingModule.resetPairs()"
+                                    style="background-color: #ff9800;">
+                                🔄 Làm lại
+                            </button>
+                            <div id="matchingResult"></div>
+                        `;
+            },
+
+            // Chọn item bên trái
+            selectLeft(id) {
+                // Kiểm tra xem item này đã được nối chưa
+                const alreadyPaired = this.userPairs.some(pair => pair.left === id);
+                if (alreadyPaired) {
+                    alert('Item này đã được nối rồi!');
+                    return;
+                }
+
+                // Bỏ chọn cũ
+                document.querySelectorAll('.left-column .match-item').forEach(item => {
+                    if (!this.userPairs.some(pair => pair.left === item.dataset.id)) {
+                        item.classList.remove('selected');
+                    }
+                });
+
+                // Chọn mới
+                this.selectedLeft = id;
+                document.querySelector(`.left-column [data-id="${id}"]`).classList.add('selected');
+
+                // Kiểm tra tạo cặp
+                if (this.selectedLeft && this.selectedRight) {
+                    this.createPair();
+                }
+            },
+
+            // Chọn item bên phải
+            selectRight(id) {
+                // Kiểm tra xem item này đã được nối chưa
+                const alreadyPaired = this.userPairs.some(pair => pair.right === id);
+                if (alreadyPaired) {
+                    alert('Item này đã được nối rồi!');
+                    return;
+                }
+
+                // Bỏ chọn cũ
+                document.querySelectorAll('.right-column .match-item').forEach(item => {
+                    if (!this.userPairs.some(pair => pair.right === item.dataset.id)) {
+                        item.classList.remove('selected');
+                    }
+                });
+
+                // Chọn mới
+                this.selectedRight = id;
+                document.querySelector(`.right-column [data-id="${id}"]`).classList.add('selected');
+
+                // Kiểm tra tạo cặp
+                if (this.selectedLeft && this.selectedRight) {
+                    this.createPair();
+                }
+            },
+
+            // Tạo cặp
+            createPair() {
+                // Thêm cặp mới
+                this.userPairs.push({
+                    left: this.selectedLeft,
+                    right: this.selectedRight
+                });
+
+                // Cập nhật UI
+                document.getElementById('pairCount').textContent = this.userPairs.length;
+
+                // Đánh dấu đã nối
+                document.querySelector(`.left-column [data-id="${this.selectedLeft}"]`).classList.add('paired');
+                document.querySelector(`.right-column [data-id="${this.selectedRight}"]`).classList.add('paired');
+
+                // Reset selection
+                this.selectedLeft = null;
+                this.selectedRight = null;
+                document.querySelectorAll('.match-item.selected').forEach(item => {
+                    item.classList.remove('selected');
+                });
+            },
+
+            // Reset các cặp đã nối
+            resetPairs() {
+                this.userPairs = [];
+                this.selectedLeft = null;
+                this.selectedRight = null;
+
+                // Reset UI
+                document.querySelectorAll('.match-item').forEach(item => {
+                    item.classList.remove('selected', 'paired', 'correct', 'incorrect');
+                });
+
+                document.getElementById('pairCount').textContent = '0';
+                document.getElementById('matchingResult').innerHTML = '';
+            },
+
+            // Kiểm tra đáp án
+            async checkAnswer() {
+                if (this.userPairs.length === 0) {
+                    alert('❗ Vui lòng nối ít nhất một cặp!');
+                    return;
+                }
+
+                if (this.userPairs.length < this.currentQuestion.leftColumn.length) {
+                    if (!confirm(`Bạn mới nối ${this.userPairs.length}/${this.currentQuestion.leftColumn.length} cặp. Vẫn muốn kiểm tra?`)) {
+                        return;
+                    }
+                }
+
+                try {
+                    const result = await Utils.fetchAPI('/matching/check', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            questionId: this.currentQuestion.id,
+                            userPairs: this.userPairs
+                        })
+                    });
+
+                    // Hiển thị kết quả
+                    this.displayResult(result);
+                } catch (error) {
+                    alert('❌ Lỗi khi kiểm tra đáp án! Vui lòng thử lại.');
+                }
+            },
+
+            // Hiển thị kết quả
+            displayResult(result) {
+                // Đánh dấu đúng/sai trên UI
+                result.results.forEach(pair => {
+                    const leftItem = document.querySelector(`.left-column [data-id="${pair.left}"]`);
+                    const rightItem = document.querySelector(`.right-column [data-id="${pair.right}"]`);
+
+                    if (pair.isCorrect) {
+                        leftItem.classList.add('correct');
+                        rightItem.classList.add('correct');
+                        leftItem.classList.remove('incorrect');
+                        rightItem.classList.remove('incorrect');
+                    } else {
+                        leftItem.classList.add('incorrect');
+                        rightItem.classList.add('incorrect');
+                        leftItem.classList.remove('correct');
+                        rightItem.classList.remove('correct');
+                    }
+                });
+
+                // Hiển thị thông tin kết quả
+                const resultDiv = document.getElementById('matchingResult');
+                resultDiv.innerHTML = `
+                        <div class="result-box">
+                            <h4>📊 Kết quả: ${result.score}/${result.total} cặp đúng (${result.percentage}%)</h4>
+                            <p>${result.message}</p>
+                            <details>
+                                <summary>👀 Xem đáp án đúng</summary>
+                                <ul>
+                                    ${result.correctPairs.map(pair => {
+                    const leftText = this.currentQuestion.leftColumn.find(item => item.id === pair.left).text;
+                    const rightText = this.currentQuestion.rightColumn.find(item => item.id === pair.right).text;
+                    return `<li>${leftText} ↔ ${rightText}</li>`;
+                }).join('')}
+                                </ul>
+                            </details>
+                        </div>
+                    `;
+            }
+        };
+
+        // ========== MAIN APPLICATION ==========
+
+        // Hàm chuyển đổi module
+        function loadModule(moduleName) {
+            // Cập nhật active tab
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Load module tương ứng
+            const container = document.getElementById('moduleContainer');
+
+            switch (moduleName) {
+                case 'quiz':
+                    QuizModule.init(container);
+                    break;
+                case 'matching':
+                    MatchingModule.init(container);
+                    break;
+					// Trong hàm loadModule, thêm case mới:
+				case 'fillblanks':
+					FillBlanksModule.init(container);
+					break;
+                default:
+                    container.innerHTML = '<div class="error">Module không tồn tại!</div>';
+            }
+        }
+
+        // Load module mặc định khi trang load
+        window.onload = function () {
+            // Load quiz module mặc định
+            QuizModule.init(document.getElementById('moduleContainer'));
+        };
+
+        // Xử lý phím tắt
+        document.addEventListener('keydown', function (e) {
+            // Trong module Quiz
+            if (document.querySelector('.quiz-module')) {
+                if (e.key === 'ArrowLeft') {
+                    QuizModule.previousQuestion();
+                } else if (e.key === 'ArrowRight') {
+                    QuizModule.nextQuestion();
+                } else if (e.key >= '1' && e.key <= '4') {
+                    // Chọn đáp án bằng phím số 1-4
+                    const optionIndex = parseInt(e.key) - 1;
+                    QuizModule.selectAnswer(optionIndex);
+                }
+            }
+        });
+
+        // Hiển thị thông báo khi rời trang nếu đang làm bài
+        window.addEventListener('beforeunload', function (e) {
+            if (QuizModule.userAnswers.length > 0 || MatchingModule.userPairs.length > 0) {
+                e.preventDefault();
+                e.returnValue = 'Bạn có chắc muốn rời trang? Dữ liệu chưa lưu sẽ bị mất!';
+            }
+        });
+    </script>
+</body>
+</html>
+
