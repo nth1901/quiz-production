@@ -1,26 +1,22 @@
+cat > docker-compose.yml << 'EOF'
 version: '3.8'
 services:
   backend:
     build: ./backend
-    ports:
-      - "3000:3000"
-    # Bỏ volumes trong production để tránh lỗi
-    # volumes:
-    #   - ./backend:/app
-    restart: always
+    container_name: backend
     networks:
-      - app-network
+      - mynet
 
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
       - "8080:80"
-    restart: always
     depends_on:
       - backend
     networks:
-      - app-network
+      - mynet
 
 networks:
-  app-network:
-    driver: bridge
+  mynet:
+EOF
